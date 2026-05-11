@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package temperature_service;
+
+service TemperatureService {
+  // Retorna a média de temperatura mais recente
+  rpc GetLatestAverage (EmptyMessage) returns (TemperatureAverage) {}
+  // Retorna médias de temperatura num intervalo de tempo (timestamps em epoch seconds)
+  rpc GetHistoricalAverages (TimeRange) returns (TemperatureAverageList) {}
+  // Lista todas as médias já armazenadas
+  rpc ListAllAverages (EmptyMessage) returns (TemperatureAverageList) {}
+  // Quantas médias estão armazenadas
+  rpc CountAverages (EmptyMessage) returns (CountReply) {}
+}
+
+message TemperatureAverage {
+  double timestamp = 1;   // epoch seconds
+  double avg_value = 2;   // temperatura média no período
+  uint32 sample_count = 3; // quantas leituras compõem essa média
+  string sensor_id = 4;
+}
+
+message TemperatureAverageList {
+  repeated TemperatureAverage items = 1;
+}
+
+message TimeRange {
+  double start_ts = 1;
+  double end_ts = 2;
+}
+
+message CountReply {
+  uint32 count = 1;
+}
+
+message EmptyMessage {}
